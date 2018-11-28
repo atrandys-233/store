@@ -36,15 +36,13 @@ install_seafile(){
   -p 443:443 \
   seafileltd/seafile:latest
   
-  echo "安装完成"
+  echo "安装完成，访问域名使用seafile"
   
 }
 
-remove_seafile(){
+remove_cache(){
 
-    docker stop seafile
-    docker rm -f seafile
-    echo "卸载完成"
+    docker exec seafile /scripts/gc.sh
 
 }
 
@@ -57,7 +55,7 @@ start_menu(){
     echo " Youtube：atrandys"
     echo "========================="
     echo "1. 安装seafile"
-    echo "2. 卸载seafile"
+    echo "2. 垃圾回收"
     echo "3. 退出"
     echo
     read -p "请输入数字:" num
@@ -67,7 +65,7 @@ start_menu(){
 	install_seafile
 	;;
 	2)
-	remove_seafile
+	remove_cache
 	;;
 	3)
 	exit 1
