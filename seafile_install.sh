@@ -27,6 +27,7 @@ install_seafile(){
   read -p "设置管理员用户名（邮箱）：" user
   read -p "设置管理员密码：" password
   docker run -d --name seafile \
+  --restart=always \
   -e SEAFILE_SERVER_LETSENCRYPT=true \
   -e SEAFILE_SERVER_HOSTNAME=$domain \
   -e SEAFILE_ADMIN_EMAIL=$user \
