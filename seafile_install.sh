@@ -32,7 +32,7 @@ install_seafile(){
   -e SEAFILE_ADMIN_EMAIL=$user \
   -e SEAFILE_ADMIN_PASSWORD=$password \
   -v /opt/seafile-data:/shared \
-  -p 80:443 \
+  -p 80:80 \
   -p 443:443 \
   seafileltd/seafile:latest
   
