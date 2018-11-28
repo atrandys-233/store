@@ -36,7 +36,49 @@ install_seafile(){
   -p 443:443 \
   seafileltd/seafile:latest
   
+  echo "安装完成"
+  
 }
 
-install_docker
-install_seafile
+remove_seafile(){
+
+    docker stop seafile
+    docker rm -f seafile
+    echo "卸载完成"
+
+}
+
+start_menu(){
+    clear
+    echo "========================="
+    echo " 介绍：适用于CentOS7"
+    echo " 作者：atrandys"
+    echo " 网站：www.atrandys.com"
+    echo " Youtube：atrandys"
+    echo "========================="
+    echo "1. 安装seafile"
+    echo "2. 卸载seafile"
+    echo "3. 退出"
+    echo
+    read -p "请输入数字:" num
+    case "$num" in
+    	1)
+	install_docker
+	install_seafile
+	;;
+	2)
+	remove_seafile
+	;;
+	3)
+	exit 1
+	;;
+	*)
+	clear
+	echo "请输入正确数字"
+	sleep 5s
+	start_menu
+	;;
+    esac
+}
+
+
