@@ -18,6 +18,7 @@ install_docker(){
 	yum -y install docker-ce
 	systemctl start docker
 	systemctl enable docker
+	echo "docker安装完成"
 
 }
 
@@ -47,6 +48,49 @@ remove_cache(){
 
 }
 
+config_iptables(){
+    systemctl stop firewalld
+    systemctl disable firewalld
+    yum install -y iptables-services
+    systemctl start iptables
+    systemctl enable iptables
+    ssh_port=$(awk '$1=="Port" {print $2}' /etc/ssh/sshd_config)
+    iptables -A INPUT -p tcp -m tcp --dport ${ssh_port} -j ACCEPT
+    iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+    iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+    iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+    iptables -A INPUT -i lo -j ACCEPT
+    iptables -P INPUT DROP
+    iptables -P FORWARD DROP
+    iptables -P OUTPUT ACCEPT
+    service iptables save
+    echo "防火墙配置完成"
+}
+
+install_fail2ban(){
+
+    yum install -y epel-release
+    yum --enablerepo=epel -y install fail2ban
+    systemctl enable fail2ban
+    port=$(awk '$1=="Port" {print $2}' /etc/ssh/sshd_config)
+    
+cat > /etc/fail2ban/jail.local <<-EOF    
+[DEFAULT]
+ignoreip = 127.0.0.1 172.31.0.0/24 10.10.0.0/24 192.168.0.0/24
+bantime = 18000
+maxretry = 5
+findtime = 300 
+[ssh-iptables]
+enabled = true
+filter = sshd
+action = iptables[name=SSH, port=$port, protocol=tcp]
+logpath = /var/log/secure
+maxretry = 3
+EOF
+
+    service fail2ban restart
+}
+
 start_menu(){
     clear
     echo "========================="
@@ -62,6 +106,8 @@ start_menu(){
     read -p "请输入数字:" num
     case "$num" in
     	1)
+	config_iptables
+	install_fail2ban
 	install_docker
 	install_seafile
 	;;
