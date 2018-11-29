@@ -11,7 +11,8 @@ fi
 
 install_docker(){
 
-	yum remove -y docker docker-client docker-client-latest docker-common docker-latest  docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine		
+    if ! [ -x "$(command -v docker)" ]
+    then		
 	yum install -y yum-utils device-mapper-persistent-data lvm2
 	yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 	yum makecache fast
@@ -19,6 +20,9 @@ install_docker(){
 	systemctl start docker
 	systemctl enable docker
 	echo "docker安装完成"
+    else
+        echo "docker已经存在"
+    fi
 
 }
 
