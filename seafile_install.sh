@@ -89,7 +89,6 @@ enabled = true
 filter = sshd
 action = iptables[name=SSH, port=$port, protocol=tcp]
 logpath = /var/log/secure
-maxretry = 3
 EOF
 
     service fail2ban restart
