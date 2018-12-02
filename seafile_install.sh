@@ -61,6 +61,7 @@ config_iptables(){
     iptables -P INPUT ACCEPT
     iptables -P FORWARD ACCEPT
     iptables -P OUTPUT ACCEPT
+    iptables -F
     ssh_port=$(awk '$1=="Port" {print $2}' /etc/ssh/sshd_config)
     iptables -A INPUT -p tcp -m tcp --dport ${ssh_port} -j ACCEPT
     iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
