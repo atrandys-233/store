@@ -85,6 +85,9 @@ install_fail2ban(){
     yum --enablerepo=epel -y install fail2ban
     systemctl enable fail2ban
     port=$(awk '$1=="Port" {print $2}' /etc/ssh/sshd_config)
+    if [ ! -n "$port" ]; then
+	port=22
+    fi
     
 cat > /etc/fail2ban/jail.local <<-EOF    
 [DEFAULT]
