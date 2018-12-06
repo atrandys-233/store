@@ -63,7 +63,7 @@ config_iptables(){
     iptables -P OUTPUT ACCEPT
     iptables -F
     ssh_port=$(awk '$1=="Port" {print $2}' /etc/ssh/sshd_config)
-    if [ ! -n $ssh_port ]; then
+    if [ ! -n "$ssh_port" ]; then
         iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
     else
         iptables -A INPUT -p tcp -m tcp --dport ${ssh_port} -j ACCEPT
