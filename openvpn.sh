@@ -8,11 +8,36 @@ rand(){
     echo $(($num%$max+$min))  
 }
 
+install_openssl(){
+
+    cd /root
+    yum remove -y openssl openssl-devel
+    yum install -y libtool openssl openssl-devel perl-core zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
+    sed -i "s/enabled=0/enabled=1/" /etc/yum.repos.d/epel.repo
+    wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
+    tar -xvzf openssl-1.1.1a.tar.gz
+    cd openssl-1.1.1a
+    ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib
+    make && make install
+    cd /etc/ld.so.conf.d/
+    echo "/usr/local/ssl/lib" >> openssl-1.1.1a.conf
+    ldconfig -v
+
+cat > /etc/profile.d/openssl.sh<<-EOF
+#Set OPENSSL_PATH
+OPENSSL_PATH=/usr/local/ssl/bin
+export OPENSSL_PATH
+PATH=$PATH:$OPENSSL_PATH
+export PATH
+EOF
+
+    chmod +x /etc/profile.d/openssl.sh
+    source /etc/profile.d/openssl.sh
+}
+
 install_openvpn(){
 
     cd /root
-    yum install -y libtool openssl openssl-devel perl-core zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
-    sed -i "s/enabled=0/enabled=1/" /etc/yum.repos.d/epel.repo
     wget https://swupdate.openvpn.org/community/releases/openvpn-2.4.7.tar.gz
     tar xzvf openvpn-2.4.7.tar.gz
     cd openvpn-2.4.7
@@ -108,6 +133,7 @@ EOF
 
 }
 
+install_openssl
 install_openvpn
 
 
