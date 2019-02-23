@@ -18,7 +18,7 @@ install_openvpn(){
     cd openvpn-2.4.7
     ./configure --prefix=/etc/openvpn
     make && make install
-    yum install easy-rsa-3.0.3-1.el7
+    yum install -y easy-rsa-3.0.3-1.el7
     #复制easy到openvpn
     cp -rf /usr/share/easy-rsa/ /etc/openvpn/easy-rsa
     #复制server.conf
@@ -28,6 +28,8 @@ install_openvpn(){
     cd /etc/openvpn/easy-rsa/3.0.3/
     #生成ta.key
     /etc/openvpn/sbin/openvpn --genkey --secret ta.key
+    #创建pki目录
+    ./easyrsa init-pki
     #生成证书
     ./easyrsa --batch build-ca nopass
     #生成服务端证书
@@ -36,6 +38,7 @@ install_openvpn(){
     ./easyrsa --batch build-client-full client1 nopass
     #生成gen
     ./easyrsa gen-dh
+    
     mkdir /etc/openvpn/client
 
     #管理证书位置
