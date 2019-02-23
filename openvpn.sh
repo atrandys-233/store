@@ -12,7 +12,7 @@ install_openssl(){
 
     cd /root
     yum remove -y openssl openssl-devel
-    yum install -y libtool openssl openssl-devel perl-core zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
+    yum install -y libtool perl-core zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
     sed -i "s/enabled=0/enabled=1/" /etc/yum.repos.d/epel.repo
     wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
     tar -xvzf openssl-1.1.1a.tar.gz
