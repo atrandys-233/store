@@ -88,7 +88,8 @@ install_openvpn(){
     sed -i "s/myport/$port/" /etc/openvpn/server.conf
 
     #启动openvpn
-    nohup /etc/openvpn/sbin/openvpn --config /etc/openvpn/server.conf > /tmp/open.log 2>&1 &
+    cd /etc/openvpn 
+    nohup /etc/openvpn/sbin/openvpn --config server.conf > open.log 2>&1 &
 
 
 #增加自启动脚本
@@ -96,7 +97,8 @@ cat > /etc/rc.d/init.d/autoopenvpn<<-EOF
 #!/bin/sh
 #chkconfig: 2345 80 90
 #description:autoopenvpn
-nohup /etc/openvpn/sbin/openvpn --config /etc/openvpn/server.conf > /tmp/open.log 2>&1 &
+cd /etc/openvpn 
+nohup /etc/openvpn/sbin/openvpn --config server.conf > open.log 2>&1 &
 EOF
 
     #设置脚本权限
