@@ -11,7 +11,6 @@ rand(){
 install_openssl(){
 
     cd /root
-    yum remove -y openssl 
     yum install -y libtool perl-core openssl-devel zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
     sed -i "s/enabled=0/enabled=1/" /etc/yum.repos.d/epel.repo
     wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
