@@ -18,21 +18,13 @@ install_openssl(){
     cd openssl-1.1.1a
     ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib
     make && make install
+    mv /usr/bin/openssl /usr/bin/openssl.old
+    mv /usr/include/openssl /usr/include/openssl.old
+    ln -s /usr/local/ssl/bin/openssl /usr/bin/openssl
+    ln -s /usr/local/ssl/include/openssl/ /usr/include/openssl
     cd /etc/ld.so.conf.d/
     echo "/usr/local/ssl/lib" >> openssl-1.1.1a.conf
     ldconfig -v
-    mv /usr/bin/openssl /usr/bin/openssl.BEKUP
-
-cat > /etc/profile.d/openssl.sh<<-EOF
-#Set OPENSSL_PATH
-OPENSSL_PATH=/usr/local/ssl/bin
-export OPENSSL_PATH
-PATH=$PATH:$OPENSSL_PATH
-export PATH
-EOF
-
-    chmod +x /etc/profile.d/openssl.sh
-    source /etc/profile.d/openssl.sh
     openssl version -a
 }
 
