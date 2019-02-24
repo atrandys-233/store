@@ -34,7 +34,7 @@ install_openvpn(){
     wget https://swupdate.openvpn.org/community/releases/openvpn-2.4.7.tar.gz
     tar xzvf openvpn-2.4.7.tar.gz
     cd openvpn-2.4.7
-    ./configure --prefix=/etc/openvpn
+    CFLAGS="-I/usr/local/ssl/include -Wl,-rpath=/usr/local/ssl/lib -L/usr/local/ssl/lib" ./configure --disable-lzo --prefix=/etc/openvpn
     make && make install
     yum install -y easy-rsa-3.0.3-1.el7
     #复制easy到openvpn
