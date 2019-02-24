@@ -11,8 +11,8 @@ rand(){
 install_openssl(){
 
     cd /root
-    yum remove -y openssl openssl-devel
-    yum install -y libtool perl-core zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
+    yum remove -y openssl 
+    yum install -y libtool perl-core openssl-devel zlib-devel gcc wget pcre* lzo lzo-devel net-tools pam pam-devel epel-release
     sed -i "s/enabled=0/enabled=1/" /etc/yum.repos.d/epel.repo
     wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
     tar -xvzf openssl-1.1.1a.tar.gz
@@ -22,6 +22,7 @@ install_openssl(){
     cd /etc/ld.so.conf.d/
     echo "/usr/local/ssl/lib" >> openssl-1.1.1a.conf
     ldconfig -v
+    mv /usr/bin/openssl /usr/bin/openssl.BEKUP
 
 cat > /etc/profile.d/openssl.sh<<-EOF
 #Set OPENSSL_PATH
@@ -33,6 +34,7 @@ EOF
 
     chmod +x /etc/profile.d/openssl.sh
     source /etc/profile.d/openssl.sh
+    openssl version -a
 }
 
 install_openvpn(){
